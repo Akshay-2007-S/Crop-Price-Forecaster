@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crop Price Forecaster — From Market Uncertainty to Informed Decisions</title>
+  <meta name="description" content="AI-powered agricultural crop price forecasting platform for Indian farmers, small shops, and traders. Real-time mandi rates, weather telemetry, and confidence intervals.">
+  
+  <!-- Modern Typography Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Top Scrolling Mandi Ticker Bar -->
+  <aside class="top-ticker-bar" aria-label="Live Mandi Price Ticker">
+    <div class="ticker-label">
+      <span class="pulse-dot"></span> LIVE APMC TICKER
+    </div>
+    <div class="ticker-track-wrap">
+      <div class="ticker-track" id="tickerTrack">
+        <!-- Injected dynamically from data.js -->
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header" role="banner">
+    <div class="header-brand" onclick="CFP_APP.switchTab('dashboard')">
+      <div class="brand-emblem" aria-hidden="true">🌱</div>
+      <div>
+        <h1 class="brand-title">CROP <span class="highlight">PRICE</span> FORECASTER</h1>
+        <p class="brand-tagline">“From Market Uncertainty to Informed Decisions”</p>
+      </div>
+    </div>
+
+    <nav class="main-nav" id="mainNavMenu" role="navigation" aria-label="Primary Navigation">
+      <a href="#dashboard" class="nav-link active" data-tab="dashboard">
+        <span aria-hidden="true">📊</span> Dashboard
+      </a>
+      <a href="#forecast" class="nav-link" data-tab="forecast">
+        <span aria-hidden="true">📈</span> Forecast
+      </a>
+      <a href="#india-market" class="nav-link" data-tab="india-market">
+        <span aria-hidden="true">🇮🇳</span> India Market
+      </a>
+      <a href="#community" class="nav-link" data-tab="community">
+        <span aria-hidden="true">👥</span> Community
+      </a>
+      <a href="#local-shops" class="nav-link" data-tab="local-shops">
+        <span aria-hidden="true">🏪</span> Local Shops
+      </a>
+      <a href="#alerts" class="nav-link" data-tab="alerts">
+        <span aria-hidden="true">🔔</span> Alerts
+      </a>
+      <a href="#tech-architecture" class="nav-link" data-tab="tech-architecture">
+        <span aria-hidden="true">⚙️</span> Architecture
+      </a>
+    </nav>
+
+    <div class="header-right">
+      <button class="demo-tour-launch-btn btn-launch-demo-tour" title="Launch Automated 2-Minute Hackathon Presentation">
+        <span aria-hidden="true">⚡</span> 2-Min Demo Tour
+      </button>
+
+      <div class="lang-select-wrap">
+        <select id="appLanguageSelect" aria-label="Select Language">
+          <option value="en">English (EN)</option>
+          <option value="hi">हिंदी (Hindi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+        </select>
+      </div>
+
+      <div class="demo-badge-indicator" title="Calibrated prototype dataset designed for Agmarknet/e-NAM integration">
+        <span class="pulse-dot"></span> Prototype Data
+      </div>
+
+      <button class="mobile-nav-btn" id="mobileNavToggle" aria-label="Toggle Navigation Menu">
+        ☰
+      </button>
+    </div>
+  </header>
+
+  <!-- App Main Content Shell -->
+  <main class="app-container" role="main">
+
+    <!-- ====================================================================
+         SECTION 1: DASHBOARD / OVERVIEW
+         ==================================================================== -->
+    <section id="section-dashboard" class="app-section active-section" aria-labelledby="heroHeading">
+      
+      <!-- Hero Banner with Holographic Farm Backdrop -->
+      <div class="hero-banner-card">
+        <div class="hero-bg-layer" aria-hidden="true"></div>
+        <div class="hero-overlay-gradient" aria-hidden="true"></div>
+        
+        <div class="hero-content">
+          <div class="hero-badge-tag">
+            <span class="pulse-dot"></span> NEXT-GEN AGRICULTURAL INTELLIGENCE
+          </div>
+          <h2 class="hero-headline" id="heroHeading">
+            Know the Price <br><span class="text-gradient-emerald">Before You Sell.</span>
+          </h2>
+          <p class="hero-subtitle">
+            AI-powered short-term crop price insights using market history, weather and regional signals. Designed for farmers, traders, and neighborhood retailers across India.
+          </p>
+          <div class="hero-buttons-row">
+            <button class="btn btn-primary" id="heroBtnExploreForecast">
+              <span>📈</span> Explore Forecast
+            </button>
+            <button class="btn btn-outline-cyan" id="heroBtnViewIndiaMarket">
+              <span>🇮🇳</span> View India Market
+            </button>
+            <button class="btn btn-ghost btn-launch-demo-tour">
+              <span>⚡</span> Start Hackathon Tour
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Core Summary KPI Cards -->
+      <div class="hero-kpi-grid">
+        <div class="kpi-stat-card glass-card">
+          <div class="kpi-label-row">
+            <span class="kpi-label">TODAY'S MARKET</span>
+            <span class="badge badge-rise">↑ 8.4%</span>
+          </div>
+          <div class="kpi-main-val">₹35<span class="text-xs text-muted">/kg</span></div>
+          <div class="kpi-sub-row">
+            <span class="text-emerald">🍅 Tomato (Modal Rate)</span>
+            <span class="text-muted">Azadpur / Kolar</span>
+          </div>
+        </div>
+
+        <div class="kpi-stat-card glass-card card-cyan">
+          <div class="kpi-label-row">
+            <span class="kpi-label">7-DAY FORECAST</span>
+            <span class="badge badge-emerald">↑ Upward</span>
+          </div>
+          <div class="kpi-main-val text-emerald">₹38<span class="text-xs text-muted">/kg</span></div>
+          <div class="kpi-sub-row">
+            <span class="text-emerald">Expected Rise (+8.5%)</span>
+            <span class="text-cyan">78% Confidence</span>
+          </div>
+        </div>
+
+        <div class="kpi-stat-card glass-card card-purple">
+          <div class="kpi-label-row">
+            <span class="kpi-label">MARKETS TRACKED</span>
+            <span class="badge badge-purple">e-NAM & APMC</span>
+          </div>
+          <div class="kpi-main-val text-purple">500+</div>
+          <div class="kpi-sub-row">
+            <span class="text-muted">Registered Mandis</span>
+            <span class="text-cyan">10 Key States</span>
+          </div>
+        </div>
+
+        <div class="kpi-stat-card glass-card">
+          <div class="kpi-label-row">
+            <span class="kpi-label">COMMUNITY</span>
+            <span class="badge badge-cyan">Active Network</span>
+          </div>
+          <div class="kpi-main-val text-cyan">12,000+</div>
+          <div class="kpi-sub-row">
+            <span class="text-muted">Farmers & Traders</span>
+            <span class="text-emerald">Crowd Ground Truth</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real Crops Showcase Banner -->
+      <div class="crops-visual-strip">
+        <div class="crops-showcase-card glass-card">
+          <div class="showcase-image-box">
+            <img src="assets/images/crop_variety.jpg" alt="Display of fresh Indian market crops with futuristic digital telemetry" loading="lazy">
+            <div class="showcase-img-badge">
+              <span class="pulse-dot"></span> High-Value Commodities Monitored Daily
+            </div>
+          </div>
+          <div class="showcase-details">
+            <span class="badge badge-cyan">ACTIVE CROP INTELLIGENCE</span>
+            <h3 class="card-title" style="margin: 6px 0 10px;">Select a Crop for Instant Short-Term Forecast</h3>
+            <p class="card-subtitle">
+              Calibrated machine learning models dynamically track harvest seasonality, transport logistics, and weather telemetry across India.
+            </p>
+            <div class="crops-chips-grid">
+              <div class="crop-quick-select-chip" onclick="CFP_APP.loadForecastFor('tomato', 'tamil_nadu')">
+                <span class="chip-icon">🍅</span>
+                <div>
+                  <div class="chip-name">Tomato</div>
+                  <div class="chip-price">₹35/kg • ↑ 8.4%</div>
+                </div>
+              </div>
+              <div class="crop-quick-select-chip" onclick="CFP_APP.loadForecastFor('onion', 'maharashtra')">
+                <span class="chip-icon">🧅</span>
+                <div>
+                  <div class="chip-name">Onion</div>
+                  <div class="chip-price">₹28/kg • → Stable</div>
+                </div>
+              </div>
+              <div class="crop-quick-select-chip" onclick="CFP_APP.loadForecastFor('chilli', 'andhra_pradesh')">
+                <span class="chip-icon">🌶️</span>
+                <div>
+                  <div class="chip-name">Chilli</div>
+                  <div class="chip-price">₹82/kg • ↑ 8.5%</div>
+                </div>
+              </div>
+              <div class="crop-quick-select-chip" onclick="CFP_APP.loadForecastFor('potato', 'uttar_pradesh')">
+                <span class="chip-icon">🥔</span>
+                <div>
+                  <div class="chip-name">Potato</div>
+                  <div class="chip-price">₹22/kg • ↓ Soft</div>
+                </div>
+              </div>
+              <div class="crop-quick-select-chip" onclick="CFP_APP.loadForecastFor('turmeric', 'tamil_nadu')">
+                <span class="chip-icon">🟡</span>
+                <div>
+                  <div class="chip-name">Turmeric</div>
+                  <div class="chip-price">₹145/kg • ↑ 6.2%</div>
+                </div>
+              </div>
+              <div class="crop-quick-select-chip" onclick="CFP_APP.loadForecastFor('brinjal', 'karnataka')">
+                <span class="chip-icon">🍆</span>
+                <div>
+                  <div class="chip-name">Brinjal</div>
+                  <div class="chip-price">₹26/kg • → Stable</div>
+                </div>
+              </div>
+              <div class="crop-quick-select-chip" onclick="CFP_APP.loadForecastFor('cabbage', 'karnataka')">
+                <span class="chip-icon">🥬</span>
+                <div>
+                  <div class="chip-name">Cabbage</div>
+                  <div class="chip-price">₹20/kg • ↓ Soft</div>
+                </div>
+              </div>
+              <div class="crop-quick-select-chip" onclick="CFP_APP.loadForecastFor('carrot', 'tamil_nadu')">
+                <span class="chip-icon">🥕</span>
+                <div>
+                  <div class="chip-name">Carrot</div>
+                  <div class="chip-price">₹38/kg • ↑ 7.9%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 Key Pillars Section -->
+      <div class="pillars-section">
+        <div class="section-title-wrap">
+          <span class="badge badge-purple">COMPREHENSIVE CAPABILITIES</span>
+          <h3 class="card-title">10 Pillars of Crop Price Forecaster</h3>
+          <p class="card-subtitle">Engineered specifically to solve asymmetric market knowledge for India's agrarian ecosystem</p>
+        </div>
+
+        <div class="pillars-grid">
+          <div class="pillar-item-card">
+            <span class="pillar-icon">🌱</span>
+            <h4 class="pillar-title">Crop-wise Forecasts</h4>
+            <p class="pillar-desc">Short-term price predictions calibrated for 8 high-volume Indian crops.</p>
+          </div>
+          <div class="pillar-item-card">
+            <span class="pillar-icon">🇮🇳</span>
+            <h4 class="pillar-title">All India Market View</h4>
+            <p class="pillar-desc">Pan-India state-by-state price comparison and mandi density visualization.</p>
+          </div>
+          <div class="pillar-item-card">
+            <span class="pillar-icon">📍</span>
+            <h4 class="pillar-title">State-wise Analysis</h4>
+            <p class="pillar-desc">Granular mandi price tracking across southern, western, and northern corridors.</p>
+          </div>
+          <div class="pillar-item-card">
+            <span class="pillar-icon">👥</span>
+            <h4 class="pillar-title">Community Insights</h4>
+            <p class="pillar-desc">Crowdsourced ground-truth observations from 12,000+ local producers and traders.</p>
+          </div>
+          <div class="pillar-item-card">
+            <span class="pillar-icon">🏪</span>
+            <h4 class="pillar-title">Small Shop Intelligence</h4>
+            <p class="pillar-desc">Margin optimizer for small fruit & vegetable shops to time wholesale purchases.</p>
+          </div>
+          <div class="pillar-item-card">
+            <span class="pillar-icon">🔔</span>
+            <h4 class="pillar-title">Smart Alerts</h4>
+            <p class="pillar-desc">Instant alerts on price spikes, rain disruptions, and cross-state arbitrage gaps.</p>
+          </div>
+          <div class="pillar-item-card">
+            <span class="pillar-icon">🌦</span>
+            <h4 class="pillar-title">Weather Signals</h4>
+            <p class="pillar-desc">IMD precipitation & temperature anomaly correlation with harvest transport.</p>
+          </div>
+          <div class="pillar-item-card">
+            <span class="pillar-icon">📊</span>
+            <h4 class="pillar-title">Forecast Uncertainty</h4>
+            <p class="pillar-desc">Visual green confidence cone so farmers understand the risk-reward range.</p>
+          </div>
+          <div class="pillar-item-card">
+            <span class="pillar-icon">📱</span>
+            <h4 class="pillar-title">Mobile Friendly</h4>
+            <p class="pillar-desc">Fast, responsive, low-bandwidth optimized experience for rural 4G access.</p>
+          </div>
+          <div class="pillar-item-card">
+            <span class="pillar-icon">🤝</span>
+            <h4 class="pillar-title">Farmer Network</h4>
+            <p class="pillar-desc">Peer-to-peer mandi price transparency to eliminate middleman exploitation.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================================
+         SECTION 2: CROP FORECAST PAGE
+         ==================================================================== -->
+    <section id="section-forecast" class="app-section" aria-labelledby="forecastHeading">
+      
+      <!-- Top Interactive Controls Bar -->
+      <div class="forecast-controls-card glass-card">
+        <div class="forecast-filter-row">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="selectForecastCrop">Select Crop</label>
+            <select id="selectForecastCrop" class="form-control">
+              <option value="tomato">🍅 Tomato (टमाटर / தக்காளி)</option>
+              <option value="onion">🧅 Onion (प्याज़ / வெங்காயம்)</option>
+              <option value="chilli">🌶️ Chilli (मिर्च / மிளகாய்)</option>
+              <option value="potato">🥔 Potato (आलू / உருளைக்கிழங்கு)</option>
+              <option value="turmeric">🟡 Turmeric (हल्दी / மஞ்சள்)</option>
+              <option value="brinjal">🍆 Brinjal (बैंगन / கத்தரிக்காய்)</option>
+              <option value="cabbage">🥬 Cabbage (पत्ता गोभी / முட்டைக்கோஸ்)</option>
+              <option value="carrot">🥕 Carrot (गाजर / கேரட்)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="selectForecastState">Select State / Region</label>
+            <select id="selectForecastState" class="form-control">
+              <option value="tamil_nadu">Tamil Nadu (TN)</option>
+              <option value="karnataka">Karnataka (KA)</option>
+              <option value="maharashtra">Maharashtra (MH)</option>
+              <option value="andhra_pradesh">Andhra Pradesh (AP)</option>
+              <option value="telangana">Telangana (TG)</option>
+              <option value="kerala">Kerala (KL)</option>
+              <option value="punjab">Punjab (PB)</option>
+              <option value="gujarat">Gujarat (GJ)</option>
+              <option value="uttar_pradesh">Uttar Pradesh (UP)</option>
+              <option value="all_india">All India Average (IN)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Select Forecast Horizon</label>
+            <div class="horizon-toggle-group" role="group" aria-label="Forecast Horizon Selector">
+              <button type="button" class="horizon-btn active" data-days="7">7 Days</button>
+              <button type="button" class="horizon-btn" data-days="14">14 Days</button>
+              <button type="button" class="horizon-btn" data-days="30">30 Days</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forecast Header Card -->
+      <div class="forecast-header-card glass-card">
+        <div class="fc-title-group">
+          <span class="badge badge-emerald"><span class="pulse-dot"></span> LIVE AI PROJECTION</span>
+          <h2 id="forecastPageCropTitle">🍅 Tomato <span class="hindi-text">(टमाटर)</span></h2>
+          <p class="card-subtitle" id="forecastPageLocation">Tamil Nadu • 7-Day AI Projection</p>
+        </div>
+        <div class="fc-trend-box">
+          <span class="badge badge-rise" id="fcTrendBadge" style="font-size: 0.95rem; padding: 0.4rem 1rem;">
+            ↑ LIKELY TO RISE
+          </span>
+        </div>
+      </div>
+
+      <!-- 4 Core Metric KPI Row -->
+      <div class="forecast-metrics-row">
+        <div class="fc-metric-card glass-card">
+          <span class="metric-lbl">CURRENT TRADED PRICE</span>
+          <div class="metric-num text-cyan" id="fcCurrentPrice">₹35</div>
+          <span class="metric-hint">Today's Mandi Modal Rate</span>
+        </div>
+
+        <div class="fc-metric-card glass-card">
+          <span class="metric-lbl">PROJECTED PRICE</span>
+          <div class="metric-num text-emerald" id="fcExpectedPrice">₹39</div>
+          <span class="metric-hint">Terminal Horizon Target</span>
+        </div>
+
+        <div class="fc-metric-card glass-card">
+          <span class="metric-lbl">EXPECTED CHANGE</span>
+          <div class="metric-num text-emerald" id="fcExpectedChange">+11.4%</div>
+          <span class="metric-hint">Anticipated Momentum</span>
+        </div>
+
+        <div class="fc-metric-card glass-card">
+          <span class="metric-lbl">AI CONFIDENCE SCORE</span>
+          <div class="metric-num text-cyan" id="fcConfidenceVal">78%</div>
+          <div class="confidence-progress-wrap">
+            <div class="confidence-progress-fill" id="fcConfidenceBar" style="width: 78%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Interactive Chart with Uncertainty Band -->
+      <div class="forecast-chart-container glass-card">
+        <div class="chart-header-legend">
+          <div>
+            <h3 class="card-title">Price Projection Curve with Uncertainty Envelope</h3>
+            <p class="card-subtitle">Past 14-day APMC history + Projected forecast with 95% Confidence Interval band</p>
+          </div>
+          <div class="chart-legends">
+            <div class="legend-chip">
+              <span class="dot-hist"></span> Historical Price
+            </div>
+            <div class="legend-chip">
+              <span class="dot-fore"></span> Forecast Price
+            </div>
+            <div class="legend-chip">
+              <span class="box-band"></span> Uncertainty Band
+            </div>
+          </div>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="forecastMainCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Farmer-Friendly Explanation Box -->
+      <div id="forecastWhyContainer">
+        <!-- Injected dynamically from app.js -->
+      </div>
+
+      <!-- Weather + Market Signal Matrix -->
+      <div id="forecastSignalsContainer">
+        <!-- Injected dynamically from app.js -->
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================================
+         SECTION 3: INDIA MARKET PAGE (Interactive Map & Comparisons)
+         ==================================================================== -->
+    <section id="section-india-market" class="app-section" aria-labelledby="indiaMarketHeading">
+      
+      <div class="market-view-header">
+        <div>
+          <span class="badge badge-cyan"><span class="pulse-dot"></span> PAN-INDIA MANDI TELEMETRY</span>
+          <h2 class="card-title" id="indiaMarketHeading">Interactive India Agricultural Market</h2>
+          <p class="card-subtitle">Click on any agricultural state on the map to inspect prices, arrival volumes, and inter-state trade corridors.</p>
+        </div>
+        <div class="market-crop-pills-row" role="tablist" aria-label="Filter Map By Crop">
+          <button type="button" class="market-crop-pill active" data-crop="tomato">🍅 Tomato</button>
+          <button type="button" class="market-crop-pill" data-crop="onion">🧅 Onion</button>
+          <button type="button" class="market-crop-pill" data-crop="chilli">🌶️ Chilli</button>
+          <button type="button" class="market-crop-pill" data-crop="potato">🥔 Potato</button>
+          <button type="button" class="market-crop-pill" data-crop="turmeric">🟡 Turmeric</button>
+          <button type="button" class="market-crop-pill" data-crop="brinjal">🍆 Brinjal</button>
+          <button type="button" class="market-crop-pill" data-crop="cabbage">🥬 Cabbage</button>
+          <button type="button" class="market-crop-pill" data-crop="carrot">🥕 Carrot</button>
+        </div>
+      </div>
+
+      <!-- Map & State Inspector Layout -->
+      <div class="india-market-layout">
+        <!-- Stylized SVG Map -->
+        <div id="indiaMapContainer">
+          <!-- Injected dynamically from india-map.js -->
+        </div>
+
+        <!-- State Inspector Details -->
+        <div id="stateDetailContainer">
+          <!-- Injected dynamically from india-map.js -->
+        </div>
+      </div>
+
+      <!-- State Comparison & Arbitrage Matrix -->
+      <div id="stateComparisonContainer">
+        <!-- Injected dynamically from india-map.js -->
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================================
+         SECTION 4: FARMER & MARKET COMMUNITY
+         ==================================================================== -->
+    <section id="section-community" class="app-section" aria-labelledby="communityHeading">
+      
+      <!-- Aggregated Community Signals Card -->
+      <div id="communitySignalsContainer">
+        <!-- Injected dynamically from community.js -->
+      </div>
+
+      <!-- Live Crowdsourced Dispatches Feed -->
+      <div id="communityFeedContainer">
+        <!-- Injected dynamically from community.js -->
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================================
+         SECTION 5: LOCAL SHOP PRICE INTELLIGENCE
+         ==================================================================== -->
+    <section id="section-local-shops" class="app-section" aria-labelledby="shopHeading">
+      <div id="shopIntelligenceContainer">
+        <!-- Injected dynamically from shop-intelligence.js -->
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         SECTION 6: SMART ALERTS
+         ==================================================================== -->
+    <section id="section-alerts" class="app-section" aria-labelledby="alertsHeading">
+      <div id="smartAlertsContainer">
+        <!-- Injected dynamically from alerts.js -->
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         SECTION 7: TECHNICAL ARCHITECTURE & HOW IT WORKS
+         ==================================================================== -->
+    <section id="section-tech-architecture" class="app-section" aria-labelledby="techHeading">
+      
+      <!-- 8-Step Pipeline Card -->
+      <div class="tech-pipeline-card glass-card">
+        <div class="signals-header">
+          <div>
+            <span class="badge badge-emerald">SYSTEM ARCHITECTURE</span>
+            <h3 class="card-title" id="techHeading">How It Works: End-to-End Prediction Pipeline</h3>
+            <p class="card-subtitle">From raw mandi records and satellite weather telemetry to plain-language farmer advisories</p>
+          </div>
+        </div>
+
+        <div class="tech-pipeline-flow">
+          <div class="pipeline-step-node">
+            <span class="step-num-badge">1</span>
+            <span class="step-icon">🏛️</span>
+            <span class="step-name">Market Data</span>
+            <span class="step-desc">APMC modal prices & daily arrival tonnage</span>
+          </div>
+          <div class="pipeline-arrow">→</div>
+
+          <div class="pipeline-step-node">
+            <span class="step-num-badge">2</span>
+            <span class="step-icon">🌦️</span>
+            <span class="step-name">Weather Data</span>
+            <span class="step-desc">IMD precipitation & temperature radar</span>
+          </div>
+          <div class="pipeline-arrow">→</div>
+
+          <div class="pipeline-step-node">
+            <span class="step-num-badge">3</span>
+            <span class="step-icon">📍</span>
+            <span class="step-name">Crop + Region</span>
+            <span class="step-desc">Sowing acreage, harvest cycle & shelf-life</span>
+          </div>
+          <div class="pipeline-arrow">→</div>
+
+          <div class="pipeline-step-node">
+            <span class="step-num-badge">4</span>
+            <span class="step-icon">⚙️</span>
+            <span class="step-name">Processing</span>
+            <span class="step-desc">Outlier winsorization & lag feature vectors</span>
+          </div>
+          <div class="pipeline-arrow">→</div>
+
+          <div class="pipeline-step-node">
+            <span class="step-num-badge">5</span>
+            <span class="step-icon">🧠</span>
+            <span class="step-name">Forecast Model</span>
+            <span class="step-desc">XGBoost & Prophet multi-modal ensemble</span>
+          </div>
+          <div class="pipeline-arrow">→</div>
+
+          <div class="pipeline-step-node">
+            <span class="step-num-badge">6</span>
+            <span class="step-icon">📊</span>
+            <span class="step-name">Price Forecast</span>
+            <span class="step-desc">7, 14, 30D curve with uncertainty cone</span>
+          </div>
+          <div class="pipeline-arrow">→</div>
+
+          <div class="pipeline-step-node">
+            <span class="step-num-badge">7</span>
+            <span class="step-icon">👥</span>
+            <span class="step-name">Community</span>
+            <span class="step-desc">12,000+ farmer crowd ground truth</span>
+          </div>
+          <div class="pipeline-arrow">→</div>
+
+          <div class="pipeline-step-node">
+            <span class="step-num-badge">8</span>
+            <span class="step-icon">🔔</span>
+            <span class="step-name">Smart Alert</span>
+            <span class="step-desc">Proactive WhatsApp & SMS advisories</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forecast Model Comparison Card (Baseline vs Time-Series vs ML) -->
+      <div class="model-comparison-section">
+        <div class="signals-header" style="margin-bottom: 1rem;">
+          <div>
+            <span class="badge badge-purple">BENCHMARK EVALUATION</span>
+            <h3 class="card-title">Forecast Model Comparison</h3>
+            <p class="card-subtitle">Prototype evaluation comparing baseline heuristics against deep time-series and gradient-boosted ensembles</p>
+          </div>
+        </div>
+
+        <div class="model-comparison-grid">
+          <!-- Baseline -->
+          <div class="model-card glass-card">
+            <div>
+              <span class="model-type-tag">BASELINE</span>
+              <h4 class="model-name">7-Day Moving Average</h4>
+              <p class="model-tech-desc">Simple / Exponential Moving Average (SMA/EMA) smoothing historical window.</p>
+              
+              <div class="model-metrics-box">
+                <div class="metric-pair">
+                  <span class="label">MAE (Error)</span>
+                  <span class="val text-muted">₹3.82 / kg</span>
+                </div>
+                <div class="metric-pair">
+                  <span class="label">RMSE</span>
+                  <span class="val text-muted">₹4.91 / kg</span>
+                </div>
+              </div>
+            </div>
+            <div class="model-verdict">
+              <strong>Verdict:</strong> Lags behind rapid weather shocks and festival demand surges by 4–6 days.
+            </div>
+          </div>
+
+          <!-- Time-Series -->
+          <div class="model-card glass-card">
+            <div>
+              <span class="model-type-tag text-cyan">TIME-SERIES MODEL</span>
+              <h4 class="model-name">ARIMA / Prophet</h4>
+              <p class="model-tech-desc">Auto-Regressive Integrated Moving Average with additive holiday seasonality components.</p>
+              
+              <div class="model-metrics-box">
+                <div class="metric-pair">
+                  <span class="label">MAE (Error)</span>
+                  <span class="val text-cyan">₹2.14 / kg</span>
+                </div>
+                <div class="metric-pair">
+                  <span class="label">RMSE</span>
+                  <span class="val text-cyan">₹2.85 / kg</span>
+                </div>
+              </div>
+            </div>
+            <div class="model-verdict">
+              <strong>Verdict:</strong> Robust for predictable seasonal waves; fails to model sudden district transport strikes or floods.
+            </div>
+          </div>
+
+          <!-- ML Ensemble -->
+          <div class="model-card glass-card model-card-best">
+            <div>
+              <span class="badge badge-emerald" style="margin-bottom: 6px;">RECOMMENDED AI ENGINE</span>
+              <span class="model-type-tag text-emerald">ML ENSEMBLE MODEL</span>
+              <h4 class="model-name text-emerald">Random Forest + XGBoost</h4>
+              <p class="model-tech-desc">Multi-modal gradient boosted trees integrating spatial mandi lag, IMD rain, and crowdsourced sentiment.</p>
+              
+              <div class="model-metrics-box" style="border: 1px solid rgba(16, 185, 129, 0.3);">
+                <div class="metric-pair">
+                  <span class="label">MAE (Error)</span>
+                  <span class="val text-emerald">₹1.48 / kg</span>
+                </div>
+                <div class="metric-pair">
+                  <span class="label">RMSE</span>
+                  <span class="val text-emerald">₹1.95 / kg</span>
+                </div>
+              </div>
+            </div>
+            <div class="model-verdict">
+              <strong>Verdict:</strong> Lowest error spread across volatile commodities (Tomato, Chilli). Evaluated on 2024-25 APMC dataset.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Sources Architecture -->
+      <div class="data-sources-card glass-card">
+        <div class="signals-header">
+          <div>
+            <span class="badge badge-cyan">DATA INTEGRATION LAYER</span>
+            <h3 class="card-title">Prototype Data Sources & API Readiness</h3>
+            <p class="card-subtitle">Designed with decoupled data ingest adapters ready for direct national API integration</p>
+          </div>
+          <span class="badge badge-amber">Demo / Sample Data Calibrated</span>
+        </div>
+
+        <table class="sources-table" role="table">
+          <thead>
+            <tr>
+              <th>Data Stream</th>
+              <th>Primary Institutional Source</th>
+              <th>Current Prototype State</th>
+              <th>Update Frequency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>🏪 Mandi / Market Prices</strong></td>
+              <td>APMC Mandis / e-NAM & Agmarknet Portal</td>
+              <td><span class="text-emerald">Calibrated Simulation (API Ready)</span></td>
+              <td>Daily morning & evening auctions</td>
+            </tr>
+            <tr>
+              <td><strong>🛰️ Weather Signals</strong></td>
+              <td>IMD (India Meteorological Department)</td>
+              <td><span class="text-emerald">Precipitation & Moisture Lag Matrix</span></td>
+              <td>6-hourly regional updates</td>
+            </tr>
+            <tr>
+              <td><strong>🌾 Crop Information</strong></td>
+              <td>Directorate of Economics & Statistics (DES)</td>
+              <td><span class="text-cyan">Agricultural Knowledge Graph</span></td>
+              <td>Seasonal crop cycles</td>
+            </tr>
+            <tr>
+              <td><strong>🚚 Regional Trends</strong></td>
+              <td>Inter-State Transit Corridors & Tolls</td>
+              <td><span class="text-cyan">Cross-District Arbitrage Engine</span></td>
+              <td>Daily inter-state logistics</td>
+            </tr>
+            <tr>
+              <td><strong>💬 Community Reports</strong></td>
+              <td>Farmer & Commission Agent Dispatches</td>
+              <td><span class="text-emerald">Active Real-Time Interactive Layer</span></td>
+              <td>Continuous crowd submissions</td>
+            </tr>
+            <tr>
+              <td><strong>🏷️ Local Shop Prices</strong></td>
+              <td>Neighborhood Sabzi Mandi Retail Logs</td>
+              <td><span class="text-emerald">Active Margin Intelligence Module</span></td>
+              <td>Daily spot retail logs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ====================================================================
+       FOOTER & FINAL MESSAGE
+       ==================================================================== -->
+  <footer class="app-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-top-row">
+        <div class="footer-brand">
+          <div class="header-brand" style="margin-bottom: 0.5rem;">
+            <div class="brand-emblem" aria-hidden="true">🌱</div>
+            <div>
+              <h2 class="brand-title">CROP <span class="highlight">PRICE</span> FORECASTER</h2>
+              <p class="brand-tagline">“From Market Uncertainty to Informed Decisions”</p>
+            </div>
+          </div>
+          <p class="text-muted text-xs" style="max-width: 480px;">
+            Empowering 140 million Indian agricultural stakeholders with transparent, multi-modal machine learning price intelligence.
+          </p>
+        </div>
+
+        <div class="final-messages-block">
+          <div class="final-lead">“Right Price. Right Time. Better Decisions.”</div>
+          <div class="final-sub">“Smarter Data. Stronger Farmers.”</div>
+        </div>
+      </div>
+
+      <div class="footer-disclaimer-card">
+        <strong>Hackathon Prototype Notice:</strong> 
+        All market figures, forecasts, and confidence metrics presented are simulated demo values calibrated on realistic APMC mandi behavior for demonstration purposes. The software architecture is engineered with standard REST/GraphQL ingestion pipelines to connect seamlessly to live Agmarknet, e-NAM, and IMD weather APIs for production deployment.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====================================================================
+       MODAL: SHARE MARKET UPDATE
+       ==================================================================== -->
+  <div class="modal-overlay" id="shareUpdateModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">🌾 Share Local Market Update</h3>
+        <button class="modal-close" id="modalCloseBtn" aria-label="Close dialog">✕</button>
+      </div>
+
+      <form id="shareUpdateForm">
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="newPostCrop">Crop</label>
+            <select id="newPostCrop" class="form-control">
+              <option value="tomato">🍅 Tomato</option>
+              <option value="onion">🧅 Onion</option>
+              <option value="chilli">🌶️ Chilli</option>
+              <option value="potato">🥔 Potato</option>
+              <option value="turmeric">🟡 Turmeric</option>
+              <option value="brinjal">🍆 Brinjal</option>
+              <option value="cabbage">🥬 Cabbage</option>
+              <option value="carrot">🥕 Carrot</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newPostRole">Your Role</label>
+            <select id="newPostRole" class="form-control">
+              <option value="Farmer">🌾 Farmer / Grower</option>
+              <option value="Mandi Trader">📈 Mandi Commission Trader</option>
+              <option value="Local Shop Owner">🏪 Local Shop Owner</option>
+              <option value="Agri Officer">🎓 Agricultural Extension Officer</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="newPostAuthor">Your Name</label>
+            <input type="text" id="newPostAuthor" class="form-control" placeholder="e.g. S. Murugan" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newPostLocation">Mandi / District</label>
+            <input type="text" id="newPostLocation" class="form-control" placeholder="e.g. Kolar, Karnataka" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="newPostSentiment">Observed Price Trend</label>
+          <select id="newPostSentiment" class="form-control">
+            <option value="Rising">↑ Rising (Prices going up)</option>
+            <option value="Stable">→ Stable (Prices unchanged)</option>
+            <option value="Softening">↓ Softening (Prices dipping / surplus)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="newPostText">Local Market Observation</label>
+          <textarea id="newPostText" class="form-control" rows="3" placeholder="What are you seeing in the field or mandi? (e.g. arrivals, quality, rainfall impact...)" required></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.25rem;">
+          <button type="button" class="btn btn-ghost" id="modalCancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">✓ Publish to Community</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Script Imports in Proper Dependency Order -->
+  <script src="js/data.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/india-map.js"></script>
+  <script src="js/community.js"></script>
+  <script src="js/shop-intelligence.js"></script>
+  <script src="js/alerts.js"></script>
+  <script src="js/demo-tour.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
